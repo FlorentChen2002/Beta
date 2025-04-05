@@ -1,0 +1,262 @@
+version: '3.8'
+
+services:
+  strapi:
+    container_name: strapi
+    build:
+      context: .
+      dockerfile: Dockerfile  # On va créer un Dockerfile pour Strapi
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_CLIENT: ${DATABASE_CLIENT}
+      DATABASE_HOST: strapiDB
+      DATABASE_PORT: ${DATABASE_PORT}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      APP_KEYS: ${APP_KEYS}
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      KAFKA_BROKER: kafka:9092  # Ajout de la connexion Kafka
+    ports:
+      - '${PORT}:${PORT}'
+    volumes:
+      - .:/srv/app
+      - /srv/app/node_modules
+    networks:
+      - strapi
+    depends_on:
+      - strapiDB
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/_health"]
+      interval: 10s
+      retries: 5
+
+  strapiDB:
+    container_name: strapiDB
+    restart: unless-stopped
+    env_file: .env
+    image: postgres:15 #une image compatible avec ma pc , postgres:latest
+    environment:
+      POSTGRES_USER: ${DATABASE_USERNAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - strapi
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}"]
+      interval: 10s
+      retries: 5
+
+  react:
+    container_name: react-frontend
+    build:
+      context: ./opsci-strapi-frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '5173:5173'
+    networks:
+      - strapi
+    depends_on:
+      strapi:
+        condition: service_healthy
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181  # Explicitement définir le port client
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+    ports:
+      - '2181:2181'
+    expose:
+      - '2181'
+    networks:
+      - strapi
+
+  kafka:
+    image: wurstmeister/kafka:2.11-1.1.1
+    container_name: kafka
+    ports:
+      - '9092:9092'
+      - '9093:9093'
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://localhost:9093,OUTSIDE://kafka:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKAJS_NO_PARTITIONER_WARNING: "1" 
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_NO_LISTENER_AUTHENTICATION_PLAINTEXT: "true"
+      KAFKA_NO_LISTENER_AUTHENTICATION_SSL: "true"
+      KAFKA_BROKER_ID: 1
+      AFKA_REPLICATION_FACTOR: 3       # Assure que la réplication soit suffisante
+      KAFKA_PARTITION_COUNT: 3
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_RETENTION_BYTES: 1073741824
+      KAFKA_LOG_DIRS: /kafka/logs
+      #KAFKA_CREATE_TOPICS: "event:1:1, product:1:1, stock:1:1, errors:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data:/kafka/logs
+    depends_on:
+      - zookeeper
+    networks:
+      - strapi
+
+  kafka-setup:
+    image: confluentinc/cp-kafka:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+      until nc -z kafka 9092; do echo 'Waiting for Kafka...'; sleep 2; done;
+      kafka-topics --create --topic product --bootstrap-server kafka:9092 --replication-factor 1 --partitions 3 &&
+      kafka-topics --create --topic event --bootstrap-server kafka:9092 --replication-factor 1 --partitions 3 &&
+      kafka-topics --create --topic stock --bootstrap-server kafka:9092 --replication-factor 1 --partitions 3 &&
+      kafka-topics --create --topic error --bootstrap-server kafka:9092 --replication-factor 1 --partitions 1
+      "
+    depends_on:
+      - kafka
+    networks:
+      - strapi
+
+  product_consumer:
+    image: arthurescriou/product-consumer:latest
+    container_name: product-consumer
+    build:
+      context: ./product-consumer
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      BROKER_1: ${BROKER_1}
+      BROKER_2: ${BROKER_2}
+      BROKER_3: ${BROKER_3}
+      STRAPI_TOKEN: ${REACT_APP_TOKEN}
+      STRAPI_URL: http://strapi:1337
+      TOPIC: product
+      ERROR_TOPIC: errors
+      BEGINNING: 'false' 
+    networks:
+      - strapi
+    depends_on:
+      - kafka-setup
+
+  event_consumer:
+    image: arthurescriou/event-consumer:1.0.0
+    container_name: event-consumer
+    build:
+      context: ./event-consumer
+      dockerfile: Dockerfile
+    environment:
+      BROKER_1: ${BROKER_1}
+      BROKER_2: ${BROKER_2}
+      BROKER_3: ${BROKER_3}
+      STRAPI_URL: ${STRAPI_URL}
+      STRAPI_TOKEN: ${REACT_APP_TOKEN}
+      TOPIC: event
+      BEGINNING: "false"
+      ERROR_TOPIC: errors
+    networks:
+      - strapi
+    depends_on:
+      - kafka-setup
+      - product_consumer
+
+  stock_consumer:
+    image: arthurescriou/stock-consumer:1.0.0
+    container_name: stock-consumer
+    build:
+      context: ./stock-consumer
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      BROKER_1: ${BROKER_1}
+      BROKER_2: ${BROKER_2}
+      BROKER_3: ${BROKER_3}
+      STRAPI_TOKEN: ${REACT_APP_TOKEN}
+      STRAPI_URL: ${STRAPI_URL}
+      TOPIC: stock
+      BEGINNING: "false"
+      ERROR_TOPIC: errors
+    networks:
+      - strapi
+    depends_on:
+      - kafka-setup
+      - event_consumer
+
+  product_producer:
+    image: arthurescriou/product-producer:1.0.0
+    container_name: product-producer
+    build:
+      context : ./product-producer
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      BROKER_1: ${BROKER_1}
+      BROKER_2: ${BROKER_1}
+      BROKER_3: ${BROKER_1}
+      STRAPI_TOKEN: ${REACT_APP_TOKEN}
+      STRAPI_URL: http://strapi:1337
+      TOPIC: product
+      FILE_NAME: products.csv
+      ERROR_TOPIC: errors
+    networks:
+      - strapi
+
+  event_producer:
+    image: arthurescriou/event-producer:1.0.3
+    container_name: event-producer
+    build:
+      context : ./event-producer
+      dockerfile: Dockerfile 
+    env_file: .env
+    environment:
+      BROKER_1: ${BROKER_1}
+      BROKER_2: ${BROKER_2}
+      BROKER_3: ${BROKER_3}
+      TOPIC: event
+      FILE_NAME: events.csv
+      ERROR_TOPIC: errors
+    depends_on:
+      - product_producer
+    networks:
+      - strapi
+
+  stock_producer:
+    image: arthurescriou/stock-producer:1.0.1
+    container_name: stock-producer
+    build:
+      context: ./stock-producer
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      BROKER_1: ${BROKER_1}
+      BROKER_2: ${BROKER_2}
+      BROKER_3: ${BROKER_3}
+      TOPIC: stock
+      FILE_NAME: stocks.csv
+    depends_on:
+      - event_producer
+    networks:
+      - strapi
+volumes:
+  pgdata:
+  kafka_data:
+
+networks:
+  strapi:
+    driver: bridge
