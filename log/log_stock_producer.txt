@@ -9,3 +9,55 @@ Fri, 04 Apr 2025 23:21:54 GMT:  Message sent successfully: 1
 Fri, 04 Apr 2025 23:21:54 GMT:  Message sent successfully: 1
 Fri, 04 Apr 2025 23:21:54 GMT:  All messages have been sent
 Fri, 04 Apr 2025 23:21:54 GMT:  Disconnecting producer ...
+
+{"level":"WARN","timestamp":"2025-04-09T14:28:58.950Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+stocks.csv
+{ id: '101', amount: '37', type: 'IN' }
+Wed, 09 Apr 2025 14:28:58 GMT:  Sending:  {"id":"101","amount":"37","type":"IN"}
+{ id: '101', amount: '22', type: 'OUT' }
+Wed, 09 Apr 2025 14:28:58 GMT:  Sending:  {"id":"101","amount":"22","type":"OUT"}
+{ id: '95', amount: '37', type: 'IN' }
+Wed, 09 Apr 2025 14:28:58 GMT:  Sending:  {"id":"95","amount":"37","type":"IN"}
+{ id: '95', amount: '22', type: 'OUT' }
+Wed, 09 Apr 2025 14:28:58 GMT:  Sending:  {"id":"95","amount":"22","type":"OUT"}
+Wed, 09 Apr 2025 14:28:58 GMT:  Waiting for all messages to be sent...
+Wed, 09 Apr 2025 14:28:58 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:28:58 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:28:58 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:28:58 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:28:58 GMT:  All messages have been sent
+Wed, 09 Apr 2025 14:28:58 GMT:  Disconnecting producer ...
+{"level":"WARN","timestamp":"2025-04-09T14:32:19.613Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+stocks.csv
+{ id: '101', amount: '37', type: 'IN' }
+Wed, 09 Apr 2025 14:32:19 GMT:  Sending:  {"id":"101","amount":"37","type":"IN"}
+{ id: '101', amount: '22', type: 'OUT' }
+Wed, 09 Apr 2025 14:32:19 GMT:  Sending:  {"id":"101","amount":"22","type":"OUT"}
+{ id: '95', amount: '37', type: 'IN' }
+Wed, 09 Apr 2025 14:32:19 GMT:  Sending:  {"id":"95","amount":"37","type":"IN"}
+{ id: '95', amount: '22', type: 'OUT' }
+Wed, 09 Apr 2025 14:32:19 GMT:  Sending:  {"id":"95","amount":"22","type":"OUT"}
+Wed, 09 Apr 2025 14:32:19 GMT:  Waiting for all messages to be sent...
+Wed, 09 Apr 2025 14:32:19 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:32:19 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:32:19 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:32:19 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:32:19 GMT:  All messages have been sent
+Wed, 09 Apr 2025 14:32:19 GMT:  Disconnecting producer ...
+{"level":"WARN","timestamp":"2025-04-09T14:37:05.801Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+stocks.csv
+{ id: '101', amount: '37', type: 'IN' }
+Wed, 09 Apr 2025 14:37:05 GMT:  Sending:  {"id":"101","amount":"37","type":"IN"}
+{ id: '101', amount: '22', type: 'OUT' }
+Wed, 09 Apr 2025 14:37:05 GMT:  Sending:  {"id":"101","amount":"22","type":"OUT"}
+{ id: '95', amount: '37', type: 'IN' }
+Wed, 09 Apr 2025 14:37:05 GMT:  Sending:  {"id":"95","amount":"37","type":"IN"}
+{ id: '95', amount: '22', type: 'OUT' }
+Wed, 09 Apr 2025 14:37:05 GMT:  Sending:  {"id":"95","amount":"22","type":"OUT"}
+Wed, 09 Apr 2025 14:37:05 GMT:  Waiting for all messages to be sent...
+Wed, 09 Apr 2025 14:37:05 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:37:05 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:37:05 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:37:05 GMT:  Message sent successfully: 1
+Wed, 09 Apr 2025 14:37:05 GMT:  All messages have been sent
+Wed, 09 Apr 2025 14:37:05 GMT:  Disconnecting producer ...

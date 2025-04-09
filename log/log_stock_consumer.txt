@@ -22,3 +22,86 @@ Error: negative stock
     at async Runner.handleBatch (/node_modules/kafkajs/src/consumer/runner.js:461:5)
     at async /node_modules/kafkajs/src/consumer/worker.js:29:9
 {"level":"ERROR","timestamp":"2025-04-04T23:22:47.826Z","logger":"kafkajs","message":"[Connection] Response Metadata(key: 3, version: 5)","broker":"kafka:9092","clientId":"stock-consumer","error":"There is no leader for this topic-partition as we are in the middle of a leadership election","correlationId":2,"size":76}
+{"level":"WARN","timestamp":"2025-04-09T14:36:29.473Z","logger":"kafkajs","message":"KafkaJS v2.0.0 switched default partitioner. To retain the same partitioning behavior as in previous versions, create the producer with the option \"createPartitioner: Partitioners.LegacyPartitioner\". See the migration guide at https://kafka.js.org/docs/migration-guide-v2.0.0#producer-new-default-partitioner for details. Silence this warning by setting the environment variable \"KAFKAJS_NO_PARTITIONER_WARNING=1\""}
+{"level":"INFO","timestamp":"2025-04-09T14:36:29.495Z","logger":"kafkajs","message":"[Consumer] Starting","groupId":"stock-creator"}
+{"level":"INFO","timestamp":"2025-04-09T14:36:51.097Z","logger":"kafkajs","message":"[ConsumerGroup] Consumer has joined the group","groupId":"stock-creator","memberId":"stock-consumer-b189167d-c0ef-4ee0-bd43-849c4b7f04c4","leaderId":"stock-consumer-b189167d-c0ef-4ee0-bd43-849c4b7f04c4","isLeader":true,"memberAssignment":{"stock":[0,1,2]},"groupProtocol":"RoundRobinAssigner","duration":21601}
+Wed, 09 Apr 2025 14:37:05 GMT:  creating {"id":"101","amount":"37","type":"IN"}
+{ id: '101', amount: '37', type: 'IN' }
+hello:  115
+{"data":{"stock_available":115}}
+Wed, 09 Apr 2025 14:37:05 GMT:  { id: '101', amount: '37', type: 'IN' } {
+  data: {
+    id: 101,
+    attributes: {
+      name: 'Maison',
+      description: ' la maison est rouge',
+      stock_available: 115,
+      barcode: 'EUW',
+      status: null,
+      createdAt: '2025-04-05T01:22:14.234Z',
+      updatedAt: '2025-04-09T14:37:05.913Z'
+    }
+  },
+  meta: {}
+}
+Wed, 09 Apr 2025 14:37:05 GMT:  created {"id":"101","amount":"37","type":"IN"}
+Wed, 09 Apr 2025 14:37:05 GMT:  creating {"id":"101","amount":"22","type":"OUT"}
+{ id: '101', amount: '22', type: 'OUT' }
+hello:  93
+{"data":{"stock_available":93}}
+Wed, 09 Apr 2025 14:37:05 GMT:  { id: '101', amount: '22', type: 'OUT' } {
+  data: {
+    id: 101,
+    attributes: {
+      name: 'Maison',
+      description: ' la maison est rouge',
+      stock_available: 93,
+      barcode: 'EUW',
+      status: null,
+      createdAt: '2025-04-05T01:22:14.234Z',
+      updatedAt: '2025-04-09T14:37:05.953Z'
+    }
+  },
+  meta: {}
+}
+Wed, 09 Apr 2025 14:37:05 GMT:  created {"id":"101","amount":"22","type":"OUT"}
+Wed, 09 Apr 2025 14:37:05 GMT:  creating {"id":"95","amount":"22","type":"OUT"}
+{ id: '95', amount: '22', type: 'OUT' }
+hello:  56
+{"data":{"stock_available":56}}
+Wed, 09 Apr 2025 14:37:05 GMT:  { id: '95', amount: '22', type: 'OUT' } {
+  data: {
+    id: 95,
+    attributes: {
+      name: 'Maison',
+      description: ' la maison est rouge',
+      stock_available: 56,
+      barcode: 'EUW',
+      status: null,
+      createdAt: '2025-04-05T01:19:38.020Z',
+      updatedAt: '2025-04-09T14:37:05.987Z'
+    }
+  },
+  meta: {}
+}
+Wed, 09 Apr 2025 14:37:05 GMT:  created {"id":"95","amount":"22","type":"OUT"}
+Wed, 09 Apr 2025 14:37:05 GMT:  creating {"id":"95","amount":"37","type":"IN"}
+{ id: '95', amount: '37', type: 'IN' }
+hello:  93
+{"data":{"stock_available":93}}
+Wed, 09 Apr 2025 14:37:06 GMT:  { id: '95', amount: '37', type: 'IN' } {
+  data: {
+    id: 95,
+    attributes: {
+      name: 'Maison',
+      description: ' la maison est rouge',
+      stock_available: 93,
+      barcode: 'EUW',
+      status: null,
+      createdAt: '2025-04-05T01:19:38.020Z',
+      updatedAt: '2025-04-09T14:37:06.010Z'
+    }
+  },
+  meta: {}
+}
+Wed, 09 Apr 2025 14:37:06 GMT:  created {"id":"95","amount":"37","type":"IN"}

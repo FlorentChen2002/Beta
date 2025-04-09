@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Strapi (Installer)
 yarn create strapi-app projet-alpha
 cd projet-alpha
@@ -161,3 +162,6 @@ docker compose up -d product_consumer event_consumer stock_consumer
       - event_consumer
     networks:
       - strapi
+=======
+Teste
+>>>>>>> remotes/origin/main
