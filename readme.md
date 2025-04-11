@@ -21,6 +21,7 @@ Exemple d'utilisation du script :
 
 # Pour arrêter le projet
 ./commande.sh stop
+```
 ---
 
 ## Partie 1 : Infrastructure de base (Strapi, PostgreSQL, Frontend React)
