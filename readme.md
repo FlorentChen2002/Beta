@@ -1,8 +1,10 @@
 *# Projet403
 
 **Binôme** : CHEN Florent (21101813), TOROSSI Valentino (28715028)  
+
 **GitHub** : [Lien vers le projet](https://github.com/FlorentChen2002/Beta/tree/main)
-**Vidéo** : [Lien vers la vidéo de démonstration](https://github.com/FlorentChen2002/Beta/tree/main)
+
+**Vidéo** : [Lien vers la vidéo de démonstration](https://www.youtube.com/watch?v=nqbnR5M5GTs&ab_channel=FlorentChen)
 ---
 ### 🚀 Lancement du projet
 
