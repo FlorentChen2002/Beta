@@ -78,6 +78,7 @@ Créez un nouveau token en donnant accès aux collections dans strapi
 1. Se déplacer dans le dossier du projet :
    ```bash
    cd projet-omega
+   yarn install
    ```
 2. Cloner le frontend :
    ```bash
