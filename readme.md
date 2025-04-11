@@ -9,7 +9,7 @@
 ---
 ### 🚀 Lancement du projet
 
-Dans la racine du projet, vous trouverez un script **`commande.sh`** qui permet de lancer ou d'arrêter le projet en fonction de l'argument passé en paramètre.
+Dans la racine du projet, vous trouverez un script **`commande.sh`** qui permet de lancer ou d'arrêter le projet en fonction de l'argument passé en paramètre. (il manque le dossier node_modules, car il était trop volumineux)
 
 #### Commandes disponibles :
 
